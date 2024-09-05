@@ -1,0 +1,38 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+*.env
+
+# macOS
+.DS_Store
+
+# Logs and other runtime files
+*.log
+
+# IDEs and text editors
+.vscode/
+.idea/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*.pyd
+*.so
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Database files
+*.sqlite3
+
+# Credentials and environment files
+.env
+
+# Custom Files to run virtualEnv on my Local Desktop
+runFiles.txt

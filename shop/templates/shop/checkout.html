@@ -1,0 +1,201 @@
+{% extends 'shop/basic.html' %}
+{% block title %}MKD-Checkout{% endblock %}
+{% block style %}
+<style>
+    /* Custom styles for the round slider */
+    .form-check-input {
+        width: 50px;
+        height: 25px;
+        background-color: #e9ecef;
+        border-radius: 25px;
+        position: relative;
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+        outline: auto;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .form-check-input:checked {
+        background-color: #007bff;
+        outline:none;
+    }
+
+    .form-check-input:before {
+        content: "";
+        width: 23px;
+        height: 23px;
+        background-color: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .form-check-input:checked:before {
+        transform: translateX(25px);
+    }
+
+    /* Adjust the spacing between the slider and the label */
+    .form-check-label {
+        margin-left: 15px;
+        font-size: 1rem;
+        color: #212529;
+    }
+</style>
+
+{% endblock %}
+{% block body %}
+<div class="container">
+    <h3 class="mt-4">Cart</h3>
+</div>
+<div class="container mt-3">
+    <ul class="list-group list-group-numbered" id="items">
+
+
+    </ul>
+</div>
+<div class="container mt-4">
+    <h4 class="mt-2 mb-2">Enter Your Details</h4>
+    <form class="mt-2 row g-3 needs-validation" novalidate>
+        <div class="mt-4 col-md-6">
+            <label for="validationCustom01" class="form-label">First name</label>
+            <input type="text" class="form-control" id="validationCustom01" value="" placeholder="First Name" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="mt-4 col-md-6">
+            <label for="validationCustom02" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="validationCustom02" value="" placeholder="Last Name" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="mt-4 col-md-6">
+            <label for="validationCustomEmail" class="form-label">Email</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text">@</span>
+                <input type="email" class="form-control" placeholder="example@email.com" id="validationCustomEmail"
+                    required>
+                <div class="invalid-feedback">
+                    Please enter a valid email address.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 col-md-6">
+            <label for="validationCustom12" class="form-label">Phone</label>
+            <input type="tel" class="form-control" id="validationCustom12" placeholder="999-999-9999" required>
+            <div class="invalid-feedback">
+                Please provide a valid Phone Number.
+            </div>
+        </div>
+
+        <div class="mt-4 col-md-12">
+            <label for="validationCustom10" class="form-label">Address Line 1</label>
+            <input type="text" class="form-control" id="validationCustom10" required>
+            <div class="invalid-feedback">
+                Please provide a valid Address.
+            </div>
+        </div>
+
+        <div class="mt-4 col-md-12">
+            <label for="validationCustom11" class="form-label">Address Line 2</label>
+            <input type="text" class="form-control" id="validationCustom11">
+
+        </div>
+
+        <div class="mt-4 col-md-4">
+            <label for="validationCustom03" class="form-label">City</label>
+            <input type="text" class="form-control" id="validationCustom03" required>
+            <div class="invalid-feedback">
+                Please provide a valid city.
+            </div>
+        </div>
+
+        <div class="mt-4 col-md-4">
+            <label for="validationCustom05" class="form-label">Zip</label>
+            <input type="text" class="form-control" id="validationCustom05" required>
+            <div class="invalid-feedback">
+                Please provide a valid zip code.
+            </div>
+        </div>
+
+        <div class="mt-4 col-md-4">
+            <label for="validationCustom04" class="form-label">State</label>
+            <select class="form-control" id="validationCustom04" required>
+                <option selected disabled value="">Choose...</option>
+                <option>California</option>
+                <option>New York</option>
+                <option>Texas</option>
+                <!-- Add more states as needed -->
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid state.
+            </div>
+        </div>
+
+        <div class="mt-4 col-12 d-flex align-items-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="invalidCheck" required>
+            </div>
+            <label class="form-check-label ms-3" for="invalidCheck">
+                Agree to terms and conditions
+            </label>
+            <div class="invalid-feedback">
+                You must agree before submitting.
+            </div>
+        </div>
+
+        <div class="mt-4 col-12 mb-5">
+            <button class="btn btn-outline-primary" type="submit">Submit form</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    
+    if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+}
+console.log(cart);
+var sum = 0;
+
+if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    console.log(cart);
+
+    // Populate the checkout list with cart items
+    if ($.isEmptyObject(cart)) {
+        // If the cart is empty
+        const emptyCartMsg = `<p>Your cart is empty, please add some items to your cart before checking out!</p>`;
+        $('#items').append(emptyCartMsg);
+    } else {
+        let sum = 0;
+        for (const item in cart) {
+            let name = cart[item][1];
+            let qty = cart[item][0];
+            sum += qty;
+            const itemHtml = `
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">${name}</div>
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">${qty}</span>
+                </li>`;
+            $('#items').append(itemHtml);
+        }
+    }
+
+</script>
+{% endblock %}

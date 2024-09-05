@@ -1,0 +1,159 @@
+{% extends 'shop/basic.html' %}
+{% block title %}ManorjiKiDukan-Contact Us{% endblock %}
+{% block style %}
+<style>
+    body,
+    html {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content {
+        flex: 1;
+    }
+</style>
+{% endblock %}
+{% block body %}
+{% if flag == 1 %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% if flag == 2 %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% if flag == 0 %}
+
+{% endif %}
+
+
+<div class="container mt-4 mb-4">
+
+
+    <form style="width: 26rem; margin: 0 auto; " action='/shop/contact/' method="post">{% csrf_token %}
+        <!-- Form Heading -->
+        <h2 class="text-center mt-3 mb-4" style="color: #2d201f;">Contact Us</h2>
+
+        <!-- Name input -->
+        <div class="mb-3">
+            <label for="userName" class="form-label">Name</label>
+            <input name="userName" type="text" class="form-control" id="userName" placeholder="Enter your name">
+        </div>
+
+        <!-- Email input -->
+        <div class="mb-3">
+            <label for="userEmail" class="form-label">Email address</label>
+            <input name="userEmail" type="email" class="form-control" id="userEmail" placeholder="Enter your email">
+        </div>
+
+        <!-- Phone input -->
+        <div class="mb-3">
+            <label for="userPhone" class="form-label">Phone</label>
+            <input name="userPhone" type="tel" class="form-control" id="userPhone"
+                placeholder="Enter Your Phone Number">
+        </div>
+
+        <!-- Message input -->
+        <div class="mb-3">
+            <label for="userMessage" class="form-label">Message</label>
+            <textarea name="userMessage" class="form-control" id="userMessage" rows="4"
+                placeholder="Write your message here..."></textarea>
+        </div>
+
+        <!-- Checkbox -->
+
+
+        <!-- Submit button -->
+        <div class="d-grid mt-2">
+            <button class="btn btn-outline-secondary btn-block">Submit</button>
+        </div>
+
+    </form>
+</div>
+<br><br>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+    var cart = {};
+  } else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateValue(cart);
+  }
+    // Function to update the popover content
+    function updateValue(cart){
+        sum = 0;
+        
+        for (var item in cart){
+            sum += cart[item][0];
+        }
+        document.getElementById('cart').innerHTML = sum.toString();
+    }
+
+    function updatePopover(cart) {
+        console.log('We are inside updatePopover');
+        var popStr = "<h5>Cart for your items in my shopping cart</h5><div class='mx-2 my-2'>";
+        var i = 1;
+        for (var item in cart) {
+            var name = cart[item][1]; // This retrieves the name stored in the cart
+            var qty = cart[item][0]; // This retrieves the quantity
+
+            popStr += "<b>" + i + "</b>. " + name.slice(0, 19) + "..." + " Qty: " + qty + '<br>';
+            i++;
+        }
+        popStr += "</div> <a href='/shop/checkout'><button class='btn btn-primary' id='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id='clearCart'>Clear Cart</button>";
+        console.log(popStr);
+        document.getElementById('popcart').setAttribute('data-content', popStr);
+        $('#popcart').popover('show');
+    }
+
+    // Function to clear the cart
+    function clearCart() {
+        localStorage.removeItem('cart');
+        cart = {};
+        updateValue(cart);
+        updatePopover(cart); // Update the popover to reflect the cleared cart
+    }
+
+    // Initialize popover and handle 'Add to Cart' button clicks
+    $(document).ready(function () {
+        // Initialize popover
+        $('#popcart').popover();
+        updatePopover(cart);
+
+        // Handle 'Add to Cart' button clicks
+        $('.divpr').on('click', 'button.cart', function () {
+            var idstr = this.id.replace('pr', ''); // Extract product ID
+            var cartKey = 'pr' + idstr;
+
+            if (cart[cartKey] !== undefined) {
+                // If the product is already in the cart, increase quantity
+                cart[cartKey][0] += 1;
+            } else {
+                // If the product is not in the cart, add it
+                cart[cartKey] = [1, document.querySelector('[data-product-id="' + idstr + '"]')?.innerText || 'Unknown Product'];
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
+            updatePopover(cart); // Update popover to reflect changes
+        });
+    });
+
+</script>
+
+{% endblock %}

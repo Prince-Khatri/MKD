@@ -1,0 +1,78 @@
+{% extends 'shop/basic.html' %}
+{% block title %}Order Tracker{% endblock %}
+
+{% block body %}
+<h1>Order Tracker</h1>
+<p>Content for Order Tracker page.</p>
+{% endblock %}
+
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+    var cart = {};
+  } else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateValue(cart);
+  }
+    // Function to update the popover content
+    function updateValue(cart){
+        sum = 0;
+        
+        for (var item in cart){
+            sum += cart[item][0];
+        }
+        document.getElementById('cart').innerHTML = sum.toString();
+    }
+
+    function updatePopover(cart) {
+        console.log('We are inside updatePopover');
+        var popStr = "<h5>Cart for your items in my shopping cart</h5><div class='mx-2 my-2'>";
+        var i = 1;
+        for (var item in cart) {
+            var name = cart[item][1]; // This retrieves the name stored in the cart
+            var qty = cart[item][0]; // This retrieves the quantity
+
+            popStr += "<b>" + i + "</b>. " + name.slice(0, 19) + "..." + " Qty: " + qty + '<br>';
+            i++;
+        }
+        popStr += "</div> <a href='/shop/checkout'><button class='btn btn-primary' id='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id='clearCart'>Clear Cart</button>";
+        console.log(popStr);
+        document.getElementById('popcart').setAttribute('data-content', popStr);
+        $('#popcart').popover('show');
+    }
+
+    // Function to clear the cart
+    function clearCart() {
+        localStorage.removeItem('cart');
+        cart = {};
+        updateValue(cart);
+        updatePopover(cart); // Update the popover to reflect the cleared cart
+    }
+
+    // Initialize popover and handle 'Add to Cart' button clicks
+    $(document).ready(function () {
+        // Initialize popover
+        $('#popcart').popover();
+        updatePopover(cart);
+
+        // Handle 'Add to Cart' button clicks
+        $('.divpr').on('click', 'button.cart', function () {
+            var idstr = this.id.replace('pr', ''); // Extract product ID
+            var cartKey = 'pr' + idstr;
+
+            if (cart[cartKey] !== undefined) {
+                // If the product is already in the cart, increase quantity
+                cart[cartKey][0] += 1;
+            } else {
+                // If the product is not in the cart, add it
+                cart[cartKey] = [1, document.querySelector('[data-product-id="' + idstr + '"]')?.innerText || 'Unknown Product'];
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
+            updatePopover(cart); // Update popover to reflect changes
+        });
+    });
+
+</script>
+
+{% endblock %}
