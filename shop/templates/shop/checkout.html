@@ -18,7 +18,7 @@
 
     .form-check-input:checked {
         background-color: #007bff;
-        outline:none;
+        outline: none;
     }
 
     .form-check-input:before {
@@ -48,6 +48,11 @@
 {% endblock %}
 {% block body %}
 <div class="container">
+    {% if thank == 0 %}
+    alert:{{ message }}
+    {% endif %}
+</div>
+<div class="container">
     <h3 class="mt-4">Cart</h3>
 </div>
 <div class="container mt-3">
@@ -58,26 +63,29 @@
 </div>
 <div class="container mt-4">
     <h4 class="mt-2 mb-2">Enter Your Details</h4>
-    <form class="mt-2 row g-3 needs-validation" novalidate>
+    <form method="post" action="/shop/checkout/" class="mt-2 row g-3 needs-validation" novalidate>{% csrf_token %}
+        <input type="hidden" name='cartItems' id='cartItems'>
         <div class="mt-4 col-md-6">
-            <label for="validationCustom01" class="form-label">First name</label>
-            <input type="text" class="form-control" id="validationCustom01" value="" placeholder="First Name" required>
+            <label for="firstName" class="form-label">First name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" value="" placeholder="First Name"
+                required>
             <div class="valid-feedback">
-                Looks good!
+                Enter First Name
             </div>
         </div>
         <div class="mt-4 col-md-6">
-            <label for="validationCustom02" class="form-label">Last name</label>
-            <input type="text" class="form-control" id="validationCustom02" value="" placeholder="Last Name" required>
+            <label for="lastName" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" value="" placeholder="Last Name"
+                required>
             <div class="valid-feedback">
-                Looks good!
+                Enter Last Name
             </div>
         </div>
         <div class="mt-4 col-md-6">
-            <label for="validationCustomEmail" class="form-label">Email</label>
+            <label for="custEmail" class="form-label">Email</label>
             <div class="input-group has-validation">
                 <span class="input-group-text">@</span>
-                <input type="email" class="form-control" placeholder="example@email.com" id="validationCustomEmail"
+                <input type="email" class="form-control" placeholder="example@email.com" id="custEmail" name="custEmail"
                     required>
                 <div class="invalid-feedback">
                     Please enter a valid email address.
@@ -86,30 +94,30 @@
         </div>
 
         <div class="mt-4 col-md-6">
-            <label for="validationCustom12" class="form-label">Phone</label>
-            <input type="tel" class="form-control" id="validationCustom12" placeholder="999-999-9999" required>
+            <label for="custPhone" class="form-label">Phone</label>
+            <input type="tel" class="form-control" id="custPhone" name="custPhone" placeholder="999-999-9999" required>
             <div class="invalid-feedback">
                 Please provide a valid Phone Number.
             </div>
         </div>
 
         <div class="mt-4 col-md-12">
-            <label for="validationCustom10" class="form-label">Address Line 1</label>
-            <input type="text" class="form-control" id="validationCustom10" required>
+            <label for="address" class="form-label">Address Line 1</label>
+            <input type="text" class="form-control" id="address" name="address" required>
             <div class="invalid-feedback">
                 Please provide a valid Address.
             </div>
         </div>
 
         <div class="mt-4 col-md-12">
-            <label for="validationCustom11" class="form-label">Address Line 2</label>
-            <input type="text" class="form-control" id="validationCustom11">
+            <label for="address2" class="form-label">Address Line 2</label>
+            <input type="text" name="address2" class="form-control" id="address2">
 
         </div>
 
         <div class="mt-4 col-md-4">
-            <label for="validationCustom03" class="form-label">City</label>
-            <input type="text" class="form-control" id="validationCustom03" required>
+            <label for="custCity" class="form-label">City</label>
+            <input type="text" class="form-control" id="custCity" name="custCity" required>
             <div class="invalid-feedback">
                 Please provide a valid city.
             </div>
@@ -117,23 +125,20 @@
 
         <div class="mt-4 col-md-4">
             <label for="validationCustom05" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="validationCustom05" required>
+            <input type="text" class="form-control" id="zipCode" name="zipCode" required>
             <div class="invalid-feedback">
                 Please provide a valid zip code.
             </div>
         </div>
 
         <div class="mt-4 col-md-4">
-            <label for="validationCustom04" class="form-label">State</label>
-            <select class="form-control" id="validationCustom04" required>
-                <option selected disabled value="">Choose...</option>
-                <option>California</option>
-                <option>New York</option>
-                <option>Texas</option>
-                <!-- Add more states as needed -->
+            <label for="custState" class="form-label">State</label>
+            <input type="text" class="form-control" id="custState" name="custState" required>
+
+
             </select>
             <div class="invalid-feedback">
-                Please select a valid state.
+                Please enter a valid state.
             </div>
         </div>
 
@@ -150,7 +155,7 @@
         </div>
 
         <div class="mt-4 col-12 mb-5">
-            <button class="btn btn-outline-primary" type="submit">Submit form</button>
+            <button class="btn btn-outline-primary" type="submit" onclick="validateTerms()">Submit form</button>
         </div>
     </form>
 </div>
@@ -158,16 +163,16 @@
 
 {% block js %}
 <script>
-    
-    if (localStorage.getItem('cart') == null) {
-    var cart = {};
-} else {
-    cart = JSON.parse(localStorage.getItem('cart'));
-}
-console.log(cart);
-var sum = 0;
 
-if (localStorage.getItem('cart') == null) {
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    } else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    console.log(cart);
+    var sum = 0;
+
+    if (localStorage.getItem('cart') == null) {
         var cart = {};
     } else {
         cart = JSON.parse(localStorage.getItem('cart'));
@@ -196,6 +201,21 @@ if (localStorage.getItem('cart') == null) {
             $('#items').append(itemHtml);
         }
     }
+    function validateTerms() {
+        var checkbox = document.getElementById('invalidCheck');
+        if (!checkbox.checked) {
+            alert("You must agree to the terms and conditions before submitting.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    $('#cartItems').val(JSON.stringify(cart));
+    {% if thank %}
+    alert("Thanks for ordering with us. Your order id is {{id}}. Use it to track your order using our order tracker")
+    localStorage.clear();
+    document.location = "/shop";
+    {% endif %}
 
 </script>
 {% endblock %}
