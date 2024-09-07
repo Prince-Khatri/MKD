@@ -44,7 +44,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/shop">ManorJi Ki Dukan</a>
+    <a class="navbar-brand" href="/">ManorJi Ki Dukan</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -53,15 +53,27 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/shop">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/shop/about">About Us</a>
+          <a class="nav-link" href="/about">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/shop/contact">Contact Us</a>
+          <a class="nav-link" href="/contact">Contact Us</a>
         </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="goToDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Go To
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="goToDropdown">
+              <li><a class="dropdown-item" href="/shop">Shop</a></li>
+              <div class="dropdown-divider"></div> <!-- Divider placed correctly -->
+              <li><a class="dropdown-item" href="/blog">Blog</a></li>
+          </ul>
+      </li>
+      
     </div>
   </nav>
 
@@ -82,10 +94,10 @@
           <h5>Links</h5>
           <ul class="list-unstyled">
               <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
             <li><a href="/">Home</a></li>
-            <li><a href="/shop">Shop</a></li>
-            <li><a href="/blog">Blog</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact Us</a></li>
             </div>
             <div class="col-md-4">
             <li><a href="/shop">Shop</a></li>
