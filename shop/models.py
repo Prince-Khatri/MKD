@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import datetime
+
 
 # Create your models here.
 
@@ -39,3 +41,28 @@ class Order(models.Model):
 
     def __str__(self):
         return self.name
+    
+class OrderUpdate(models.Model):
+    updateId = models.AutoField(primary_key = True)
+    ordId = models.IntegerField()
+    updates = models.JSONField(default = list,blank = True)
+
+    def __str__ (self):
+        return 'Order No : '+str(self.ordId)
+    
+    def setUpdate(self,newUpdateText):
+        try:
+            newUp = {
+                'updateText':newUpdateText,
+                'updateTime':datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+            }
+            self.updates.insert(0,newUp)
+            self.save()
+            return True
+        except Exception as e:
+            print(f"Exception Occured:{e}")
+            return False
+    
+   
+
+

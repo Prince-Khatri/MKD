@@ -1,9 +1,82 @@
 {% extends 'shop/basic.html' %}
+
 {% block title %}Order Tracker{% endblock %}
 
+
+
 {% block body %}
-<h1>Order Tracker</h1>
-<p>Content for Order Tracker page.</p>
+{% if updateFlag == 2 %}
+<div class="container mt-4 mb-2">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Sorry, we couldn't find any updates for this order.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<div class="container mt-4 mb-5">
+
+    <h4 class="mt-2 mb-2">Enter Your Order Details</h4>
+    <form method="post" action="/shop/tracker/" class="mt-2 row g-3 needs-validation" novalidate>{% csrf_token %}
+        
+        <div class="mt-4 col-md-4">
+            <label for="firstName" class="form-label">Order Id</label>
+            <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id"
+                required>
+            <div class="valid-feedback">
+                Please Enter Order Id
+            </div>
+        </div>
+       
+        <div class="mt-4 col-md-8">
+            <label for="custEmail" class="form-label">Email</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text">@</span>
+                <input type="email" class="form-control" placeholder="example@email.com" id="custEmail" name="custEmail"
+                    required>
+                <div class="invalid-feedback">
+                    Please enter a valid email address.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 col-12 mb-4">
+            <button class="btn btn-outline-primary" type="submit" >Check Status</button>
+        </div>
+    </form>
+
+
+    {% if updateFlag %}
+    <h4 class=" mb-2">Updates</h4>
+        <div class="container mt-3">
+            <ul class="list-group list-group-numbered" id="updates">
+                {% if updateFlag == 1 %}
+                {% for update in updates %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">{{update.updateText}}</div>
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">{{update.updateTime}}</span>
+                </li>
+                
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
+</div>
+
+
+
+
+
+
+
+
+
 {% endblock %}
 
 {% block js %}
@@ -72,6 +145,8 @@
             updatePopover(cart); // Update popover to reflect changes
         });
     });
+
+
 
 </script>
 

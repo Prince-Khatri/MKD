@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product,Contact,Order
+from .models import Product,Contact,Order,OrderUpdate
 from math import ceil
 import re
 
@@ -83,20 +83,11 @@ def index(request):
 def about(request):
     return render(request,'shop/about.html',{'cat':categories})
 
-
-
-
-def tracker(request):
-    return render(request,'shop/tracker.html',{'cat':categories})
-
-
 def search(request):
     return render(request,'shop/search.html',{'cat':categories})
 
-
 def cart(request):
     return render(request,'shop/cart.html',{'cat':categories})
-
 
 def product(request,prId):
     product = Product.objects.filter(id = prId)
@@ -220,6 +211,8 @@ def checkout(request):
         try:
             # Saving the order
             order.save()
+            update =  OrderUpdate(ordId = order.ordId)
+            update.setUpdate("Order Has Been Placed Successfully.")
             thank = 1
             message = 'Order Placed Successfully'
             return render(request, 'shop/checkout.html', {'cat': categories, 'thank': thank, 'message': message, 'id':order.ordId})
@@ -232,3 +225,21 @@ def checkout(request):
 
 
     return render(request, 'shop/checkout.html', {'cat': categories})
+
+def tracker(request):
+
+    if request.method == 'POST':
+        ordId = request.POST.get('orderId',default = '')
+        email = request.POST.get('custEmail',default = '')
+
+        try:
+            order = Order.objects.get(ordId = ordId,email = email)
+            updates = OrderUpdate.objects.get(ordId = order.ordId)
+            return render(request,'shop/tracker.html',{'cat':categories,'updates':updates.updates,'updateFlag':1})
+
+
+        except Exception as e:
+            print(f'Exception occured:{e}')
+            return render(request,'shop/tracker.html',{'cat':categories,'updateFlag':2})
+
+    return render(request,'shop/tracker.html',{'cat':categories})
