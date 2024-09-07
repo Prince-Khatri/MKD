@@ -1,0 +1,35 @@
+{% extends 'basic.html' %}
+
+{% block title %} ManojikiDukan - Home {% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <!-- Welcome Section -->
+    <div class="jumbotron text-center bg-light py-5">
+        <h1 class="display-4">Welcome to ManojikiDukan</h1>
+        <p class="lead">Explore our shop and read our latest blogs!</p>
+        <hr class="my-4">
+        <p>Check out our amazing products and insightful articles below.</p>
+        <a class="btn btn-primary btn-lg" href="/shop" role="button">Shop Now</a>
+        <a class="btn btn-secondary btn-lg" href="/blog" role="button">Read Blogs</a>
+    </div>
+
+    <!-- Shop Section -->
+    <div class="row my-5">
+        <div class="col text-center">
+            <h2 class="mb-4">Shop Products</h2>
+            <p>Explore our wide range of products curated just for you.</p>
+            <a class="btn btn-outline-primary" href="/shop">Visit Shop</a>
+        </div>
+    </div>
+
+    <!-- Blog Section -->
+    <div class="row my-5">
+        <div class="col text-center">
+            <h2 class="mb-4">Latest Blogs</h2>
+            <p>Stay updated with the latest news and articles from our blog.</p>
+            <a class="btn btn-outline-secondary" href="/blog">Visit Blog</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
