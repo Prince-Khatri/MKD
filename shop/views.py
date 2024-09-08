@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product,Contact,Order,OrderUpdate
+from .models import Product,Contact,Order,OrderUpdate,Invoice
 from math import ceil
 import re
 
@@ -212,7 +212,11 @@ def checkout(request):
             # Saving the order
             order.save()
             update =  OrderUpdate(ordId = order.ordId)
+            invoice = Invoice(ordId = order.ordId)
             update.setUpdate("Order Has Been Placed Successfully.")
+            invoice.save()
+            invoice.generateInvoicePdf()
+            invoice.save()
             thank = 1
             message = 'Order Placed Successfully'
             return render(request, 'shop/checkout.html', {'cat': categories, 'thank': thank, 'message': message, 'id':order.ordId})
@@ -234,8 +238,9 @@ def tracker(request):
 
         try:
             order = Order.objects.get(ordId = ordId,email = email)
+            invoice = Invoice.objects.get(ordId = ordId)
             updates = OrderUpdate.objects.get(ordId = order.ordId)
-            return render(request,'shop/tracker.html',{'cat':categories,'updates':updates.updates,'updateFlag':1})
+            return render(request,'shop/tracker.html',{'cat':categories,'updates':updates.updates,'updateFlag':1,'invoice':invoice})
 
 
         except Exception as e:

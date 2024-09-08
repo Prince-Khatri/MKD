@@ -36,3 +36,6 @@ build/
 
 # Custom Files to run virtualEnv on my Local Desktop
 runFiles.txt
+invoice.py
+*.pdf
+invoice.py
