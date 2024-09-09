@@ -17,6 +17,9 @@ env/
 .vscode/
 .idea/
 
+# Media Files
+media/
+
 # Byte-compiled / optimized / DLL files
 *.py[cod]
 *.pyd
